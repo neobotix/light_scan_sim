@@ -32,7 +32,8 @@ LightScanSim::LightScanSim(ros::NodeHandle node) {
   node.getParam("map/image_frame", image_frame_);
   node.getParam("laser/frame", laser_frame_);
 
-  // Subscribe / Publish
+  tf_map_to_odom_.frame_id_ = std::string("/map_image");
+  tf_map_to_odom_.child_frame_id_ = std::string("/odom");
   map_sub_ = node.subscribe(map_topic_, 1, &LightScanSim::MapCallback, this);
   materials_sub_ = node.subscribe(materials_topic_, 1, &LightScanSim::MaterialsCallback, this);
   segments_sub_ = node.subscribe(segments_topic_, 1, &LightScanSim::SegmentsCallback, this);
@@ -125,6 +126,15 @@ void LightScanSim::Update() {
     ROS_WARN("LightScanSim: %s",ex.what());
     return;
   }
+ tf_map_to_odom_.stamp_ = ros::Time::now();
+
+  // specify actual transformation vectors from odometry
+  // NOTE: zeros have to be substituted with actual variable data
+  tf_map_to_odom_.setOrigin(tf::Vector3(0.0f, 0.0f, 0.0f));
+  tf_map_to_odom_.setRotation(tf::createQuaternionFromRPY(0, 0, 0));
+
+  // broadcast transform
+  tf_broadcaster_.sendTransform(tf::StampedTransform(tf_map_to_odom_, ros::Time::now(),map_.header.frame_id,"/odom"));
 
   // Convert that point from m to px
   cv::Point laser_point(image_to_laser.getOrigin().x()/map_.info.resolution,

@@ -15,8 +15,8 @@
 
   <!-- visualize the segment list -->
   <node name="visualize_segment_list" pkg="light_scan_sim" type="visualize_segment_list.py" output="screen">
-    <param name="input_topic" value="/map_segments" />
-    <param name="materials_topic" value="/map_materials" />
+    <!-- <param name="input_topic" value="/map_segments" /> -->
+    <!-- <param name="materials_topic" value="/map_materials" /> -->
     <param name="output_topic" value="/map_segment_vis" />
   </node>
 

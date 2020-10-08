@@ -33,6 +33,9 @@ class LightScanSim {
   tf::Transform map_to_image_;
   tf::TransformBroadcaster tf_broadcaster_;
   tf::TransformListener tf_listener_;
+  int32_t publish_rate_ = 100;
+  tf::TransformBroadcaster tf_br_;
+  tf::StampedTransform tf_map_to_odom_;
   bool map_loaded_ = false;
   bool segments_loaded_ = false;
   bool materials_loaded_ = false;
@@ -52,6 +55,8 @@ class LightScanSim {
 
   std::string image_frame_ = "/map_image";
   std::string laser_frame_ = "/initialpose";
+
+
 
   public:
     LightScanSim(ros::NodeHandle node);
